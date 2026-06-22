@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DevTools Companion for Angular</title>
+  <link rel="stylesheet" href="../styles/panel.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header / Tab bar -->
+    <header id="tab-bar">
+      <div id="logo">
+        <span class="logo-icon">&#9650;</span>
+        <span class="logo-text">DevTools Angular</span>
+      </div>
+      <nav id="tabs">
+        <button class="tab-btn active" data-tab="tree">🌲 Components</button>
+        <button class="tab-btn" data-tab="http">📡 HTTP</button>
+        <button class="tab-btn" data-tab="store">🗄️ Store</button>
+        <button class="tab-btn" data-tab="router">🛣️ Router</button>
+        <button class="tab-btn" data-tab="di">💉 DI</button>
+        <button class="tab-btn" data-tab="performance">⚡ Performance</button>
+        <button class="tab-btn" data-tab="sources">🗺️ Sources</button>
+        <button class="tab-btn" data-tab="debug">🐛 Debug</button>
+        <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
+      </nav>
+      <div id="header-actions">
+        <select id="lang-selector" title="Language / Idioma / Langue / Sprache / Idioma / Lingua" aria-label="Interface language">
+          <option value="en">🇬🇧 English</option>
+          <option value="es">🇪🇸 Español</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="pt">🇵🇹 Português</option>
+          <option value="it">🇮🇹 Italiano</option>
+        </select>
+        <span id="angular-badge" class="badge badge-detecting">Detecting Angular…</span>
+        <button id="refresh-btn" title="Refresh inspection">↺</button>
+      </div>
+    </header>
+
+    <!-- Status banner (shown when Angular not detected / production mode) -->
+    <div id="status-banner" class="hidden"></div>
+
+    <!-- Tab panels -->
+    <main id="panel-content">
+      <div id="tab-tree"        class="tab-panel active"></div>
+      <div id="tab-http"        class="tab-panel"></div>
+      <div id="tab-store"       class="tab-panel"></div>
+      <div id="tab-router"      class="tab-panel"></div>
+      <div id="tab-di"          class="tab-panel"></div>
+      <div id="tab-performance" class="tab-panel"></div>
+      <div id="tab-sources"     class="tab-panel"></div>
+      <div id="tab-debug"       class="tab-panel"></div>
+      <div id="tab-settings"    class="tab-panel"></div>
+    </main>
+  </div>
+
+  <!-- i18n must load first so t() is available to all components -->
+  <script src="i18n.js"></script>
+  <!-- Component scripts -->
+  <script src="components/tree.js"></script>
+  <script src="components/http.js"></script>
+  <script src="components/store.js"></script>
+  <script src="components/router.js"></script>
+  <script src="components/di.js"></script>
+  <script src="components/performance.js"></script>
+  <script src="components/sources.js"></script>
+  <script src="components/debug.js"></script>
+  <script src="panel.js"></script>
+</body>
+</html>

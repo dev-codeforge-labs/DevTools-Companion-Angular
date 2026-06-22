@@ -1,0 +1,56 @@
+{
+  "manifest_version": 3,
+  "name": "DevTools Companion for Angular",
+  "version": "1.1.4",
+  "description": "Deep introspection for Angular apps — Component Tree, HTTP Monitor, Store, Router, DI, Performance, and Source Maps. Firefox & Chrome.",
+  "author": "DevTools Companion Contributors",
+  "license": "MIT",
+  "homepage_url": "https://github.com/devtools-companion/devtools-companion-angular",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "devtools-companion-angular@devtools-companion.dev",
+      "strict_min_version": "115.0"
+    }
+  },
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'unsafe-inline'; object-src 'self'"
+  },
+
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
+  },
+
+  "permissions": [
+    "activeTab",
+    "devtools",
+    "storage",
+    "scripting",
+    "webRequest"
+  ],
+  "host_permissions": ["<all_urls>"],
+
+  "devtools_page": "devtools/devtools.html",
+
+  "background": {
+    "scripts": ["background/background.js"]
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_scripts/inspector.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": ["inject/ng-bridge.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

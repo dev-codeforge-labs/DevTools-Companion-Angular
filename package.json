@@ -1,0 +1,32 @@
+{
+  "name": "devtools-companion-angular",
+  "version": "1.1.4",
+  "description": "DevTools extension for Angular application introspection — Firefox & Chrome",
+  "scripts": {
+    "build": "node build.js",
+    "icons": "node build.js icons",
+    "package": "node build.js package",
+    "lint": "web-ext lint --source-dir . --ignore-files build.js package.json dist/** .claude/**",
+    "sign": "web-ext sign --source-dir . --api-key $AMO_API_KEY --api-secret $AMO_API_SECRET --channel unlisted"
+  },
+  "devDependencies": {
+    "docx": "^9.7.1",
+    "web-ext": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "firefox",
+    "devtools",
+    "angular",
+    "extension",
+    "inspector",
+    "debugging"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular-inspector/angular-inspector"
+  }
+}
