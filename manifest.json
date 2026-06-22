@@ -10,12 +10,16 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "devtools-companion-angular@devtools-companion.dev",
-      "strict_min_version": "115.0"
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["none"],
+        "optional": []
+      }
     }
   },
 
   "content_security_policy": {
-    "extension_pages": "script-src 'self' 'unsafe-inline'; object-src 'self'"
+    "extension_pages": "script-src 'self'; object-src 'self'"
   },
 
   "icons": {
