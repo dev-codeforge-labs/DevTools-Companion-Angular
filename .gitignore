@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Generated files (produced by build.js)
+icons/icon-48.png
+icons/icon-96.png
+
+# Build helper scripts (generated, not source)
+generate-manual.js
+write-spec.js
+
+# Generated documents
+DevTools-Companion-Angular-User-Manual.docx
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
