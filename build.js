@@ -10,6 +10,9 @@
  *   node build.js package           # only package (icons must exist)
  *   node build.js chrome package    # Chrome package only
  *
+ * Each browser uses its own manifest (manifest.firefox.json / manifest.chrome.json)
+ * so store-specific validation requirements are explicit and version-controlled.
+ *
  * No external dependencies — uses only Node.js built-ins (zlib, fs, path, crypto).
  */
 
@@ -223,42 +226,26 @@ function crc32(buf) {
   return (crc ^ 0xFFFFFFFF) >>> 0;
 }
 
-// ── XPI packager ───────────────────────────────────────────────────────────
+// ── Manifest loader ────────────────────────────────────────────────────────
 
-// ── Chrome manifest patcher ────────────────────────────────────────────────
-
-function buildChromeManifest(original) {
-  const m = JSON.parse(JSON.stringify(original)); // deep clone
-
-  // Firefox-only key — Chrome rejects it
-  delete m.browser_specific_settings;
-
-  // MV3 Chrome requires service_worker instead of scripts[]
-  if (m.background && Array.isArray(m.background.scripts)) {
-    m.background = { service_worker: m.background.scripts[0] };
-  }
-
-  // Remove 'unsafe-inline' — blocked by Chrome's extension CSP
-  if (m.content_security_policy?.extension_pages) {
-    m.content_security_policy.extension_pages =
-      m.content_security_policy.extension_pages
-        .replace(/'unsafe-inline'\s*/g, '')
-        .replace(/\s{2,}/g, ' ')
-        .trim();
-  }
-
-  // Prepend browser-shim to content scripts so inspector.js sees `browser`
-  if (Array.isArray(m.content_scripts?.[0]?.js)) {
-    m.content_scripts[0].js = ['compat/browser-shim.js', ...m.content_scripts[0].js];
-  }
-
-  return m;
+function loadManifest(target) {
+  const file = target === 'chrome' ? 'manifest.chrome.json' : 'manifest.firefox.json';
+  return JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8'));
 }
 
 // ── File excludes ──────────────────────────────────────────────────────────
 
+// Icons required per target:
+//   Firefox: 48, 96
+//   Chrome:  16, 48, 128  (Chrome Web Store enforces 128; 16 for toolbar)
+const ICON_SIZES = {
+  firefox: [48, 96],
+  chrome:  [16, 48, 128],
+};
+
 const EXCLUDE = new Set([
   'build.js', 'package.json', 'package-lock.json',
+  'manifest.firefox.json', 'manifest.chrome.json',
   '.gitignore', '.git', 'dist', '.claude',
   'node_modules', 'icons/generate-icons.html',
 ]);
@@ -374,13 +361,12 @@ function ok()      { process.stdout.write(' ✓'); }
   console.log(`╚${bar}╝`);
 
   if (doIcons) {
-    step('Generating icon-48.png');
-    fs.writeFileSync(path.join(ROOT, 'icons', 'icon-48.png'), createIconPNG(48));
-    ok();
-
-    step('Generating icon-96.png');
-    fs.writeFileSync(path.join(ROOT, 'icons', 'icon-96.png'), createIconPNG(96));
-    ok();
+    const sizes = ICON_SIZES[TARGET];
+    for (const size of sizes) {
+      step(`Generating icon-${size}.png`);
+      fs.writeFileSync(path.join(ROOT, 'icons', `icon-${size}.png`), createIconPNG(size));
+      ok();
+    }
   }
 
   if (doPackage) {
@@ -388,12 +374,17 @@ function ok()      { process.stdout.write(' ✓'); }
     const files = collectFiles(ROOT);
     ok();
 
-    // Build in-memory entries, applying Chrome patches where needed
+    // Load the browser-specific manifest (source of truth, no runtime patching)
+    const manifestData = Buffer.from(
+      JSON.stringify(loadManifest(TARGET), null, 2), 'utf8'
+    );
+
+    // On Chrome, background.js and panel.js need the browser shim prepended
+    // (content scripts already list compat/browser-shim.js in manifest.chrome.json)
     const shimData = TARGET === 'chrome'
       ? fs.readFileSync(path.join(ROOT, 'compat', 'browser-shim.js'))
       : null;
 
-    // Files that need the shim prepended in the Chrome service-worker/panel context
     const PREPEND_SHIM = new Set([
       'background/background.js',
       'devtools/panel.js',
@@ -402,15 +393,11 @@ function ok()      { process.stdout.write(' ✓'); }
     const entries = files.map(({ fullPath, relPath }) => {
       let data = fs.readFileSync(fullPath);
 
-      if (TARGET === 'chrome') {
-        if (relPath === 'manifest.json') {
-          // Replace with Chrome-patched manifest
-          const original = JSON.parse(data.toString('utf8'));
-          data = Buffer.from(JSON.stringify(buildChromeManifest(original), null, 2), 'utf8');
-        } else if (PREPEND_SHIM.has(relPath)) {
-          // Prepend shim so `browser` is defined before any usage
-          data = Buffer.concat([shimData, Buffer.from('\n'), data]);
-        }
+      if (relPath === 'manifest.json') {
+        // Replace the generic manifest with the target-specific one
+        data = manifestData;
+      } else if (TARGET === 'chrome' && PREPEND_SHIM.has(relPath)) {
+        data = Buffer.concat([shimData, Buffer.from('\n'), data]);
       }
 
       return { relPath, data };
