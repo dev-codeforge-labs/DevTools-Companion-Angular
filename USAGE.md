@@ -1,441 +1,486 @@
-# DevTools Companion for Angular — Guía de instalación y manual de usuario
+# DevTools Companion for Angular — Installation guide and user manual
 
-## Tabla de contenidos
+## Table of contents
 
-1. [Requisitos](#1-requisitos)
-2. [Instalación](#2-instalación)
-   - [Opción A — XPI permanente (usuario personal)](#opción-a--xpi-permanente-usuario-personal)
-   - [Opción B — Instalación temporal (desarrolladores)](#opción-b--instalación-temporal-desarrolladores)
-   - [Opción C — Firefox Developer Edition / Nightly](#opción-c--firefox-developer-edition--nightly)
-   - [Opción D — AMO (distribución pública)](#opción-d--amo-distribución-pública)
-3. [Primeros pasos](#3-primeros-pasos)
-4. [Manual de usuario](#4-manual-de-usuario)
-   - [🌲 Components — Árbol de componentes](#-components--árbol-de-componentes)
-   - [📡 HTTP — Monitor de peticiones](#-http--monitor-de-peticiones)
-   - [🗄️ Store — Gestión de estado](#️-store--gestión-de-estado)
-   - [🛣️ Router — Inspector de rutas](#️-router--inspector-de-rutas)
-   - [💉 DI — Inyección de dependencias](#-di--inyección-de-dependencias)
+1. [Requirements](#1-requirements)
+2. [Installation](#2-installation)
+   - [Firefox — Option A: Permanent XPI (personal use)](#option-a--permanent-xpi-personal-use)
+   - [Firefox — Option B: Temporary installation (developers)](#option-b--temporary-installation-developers)
+   - [Firefox — Option C: Firefox Developer Edition / Nightly](#option-c--firefox-developer-edition--nightly)
+   - [Firefox — Option D: AMO (public distribution)](#option-d--amo-public-distribution)
+   - [Chrome — Option E: Chrome Web Store](#option-e--chrome-web-store)
+   - [Chrome — Option F: Unpacked extension (developers)](#option-f--unpacked-extension-developers)
+3. [Getting started](#3-getting-started)
+4. [User manual](#4-user-manual)
+   - [🌲 Components — Component tree](#-components--component-tree)
+   - [📡 HTTP — Request monitor](#-http--request-monitor)
+   - [🗄️ Store — State management](#️-store--state-management)
+   - [🛣️ Router — Route inspector](#️-router--route-inspector)
+   - [💉 DI — Dependency injection](#-di--dependency-injection)
    - [⚡ Performance — Profiler](#-performance--profiler)
-   - [🗺️ Sources — Source Maps](#️-sources--source-maps)
-   - [⚙️ Settings — Configuración](#️-settings--configuración)
-5. [Limitaciones conocidas](#5-limitaciones-conocidas)
-6. [Solución de problemas](#6-solución-de-problemas)
+   - [🗺️ Sources — Source maps](#️-sources--source-maps)
+   - [⚙️ Settings](#️-settings)
+5. [Known limitations](#5-known-limitations)
+6. [Troubleshooting](#6-troubleshooting)
 
 ---
 
-## 1. Requisitos
+## 1. Requirements
 
-| Requisito | Firefox | Chrome |
+| Requirement | Firefox | Chrome |
 |---|---|---|
-| Versión mínima del navegador | 115+ (ESR o Stable) | 120+ |
-| Angular (app inspeccionada) | 12 — 18+ | 12 — 18+ |
-| Node.js (solo para el build) | 18+ | 18+ |
+| Minimum browser version | 140+ | 112+ |
+| Angular (inspected app) | 9 — 18+ | 9 — 18+ |
+| Node.js (build only) | 18+ | 18+ |
 
-DevTools Companion for Angular es compatible con **Firefox** y **Chrome**. El build de Firefox genera un `.xpi`; el de Chrome genera un `.zip` listo para subir a Chrome Web Store o cargar como extensión desempaquetada.
+DevTools Companion for Angular is compatible with **Firefox** and **Chrome**. The Firefox build produces an `.xpi` file; the Chrome build produces a `.zip` ready to upload to the Chrome Web Store or load as an unpacked extension.
 
 ---
 
-## 2. Instalación
+## 2. Installation
 
-### Opción A — XPI permanente (usuario personal)
+### Firefox
 
-Esta opción instala la extensión de forma permanente sin pasar por AMO. Requiere desactivar la verificación de firma solo para Firefox ESR o versiones de desarrollo, **o** usar el archivo `.xpi` previamente firmado.
+#### Option A — Permanent XPI (personal use)
 
-#### Paso 1 — Generar el XPI (si no lo tienes ya)
+This option installs the extension permanently without going through AMO. It requires disabling signature verification, which is only possible on Firefox ESR, Developer Edition, or Nightly — **or** using a pre-signed `.xpi` file.
+
+**Step 1 — Build the XPI**
 
 ```bash
-# Desde la carpeta angular-inspector/
-node build.js
-# El archivo resultante estará en dist/angular-inspector.xpi
+# From the project folder
+npm run build:firefox
+# Output: dist/devtools-companion-angular-<version>.xpi
 ```
 
-#### Paso 2 — Activar la instalación desde archivos locales
+**Step 2 — Allow installation from local files**
 
-1. Abre Firefox y escribe en la barra de dirección:
+1. Open Firefox and type in the address bar:
    ```
    about:config
    ```
-2. Acepta la advertencia y busca:
+2. Accept the warning and search for:
    ```
    xpinstall.signatures.required
    ```
-3. Cambia el valor a **`false`** haciendo clic en el botón de alternancia.
+3. Toggle the value to **`false`**.
 
-   > Esta opción solo está disponible en **Firefox Developer Edition**, **Firefox Nightly** y **Firefox ESR**. En Firefox estable esta preferencia no existe o no tiene efecto.
+   > This preference only takes effect on **Firefox Developer Edition**, **Firefox Nightly**, and **Firefox ESR**. It has no effect on Firefox Stable.
 
-#### Paso 3 — Instalar el XPI
+**Step 3 — Install the XPI**
 
-1. Abre el menú de Firefox (☰) → **Complementos y temas** (o `about:addons`).
-2. Haz clic en el ícono de engranaje ⚙ → **Instalar complemento desde archivo…**
-3. Selecciona `dist/angular-inspector.xpi`.
-4. Confirma la instalación en el diálogo que aparece.
+1. Open the Firefox menu (☰) → **Add-ons and Themes** (or `about:addons`).
+2. Click the gear icon ⚙ → **Install Add-on From File…**
+3. Select `dist/devtools-companion-angular-<version>.xpi`.
+4. Confirm the installation in the dialog.
 
-La extensión queda instalada de forma permanente y sobrevive reinicios del navegador.
+The extension is installed permanently and survives browser restarts.
 
 ---
 
-### Opción B — Instalación temporal (desarrolladores)
+#### Option B — Temporary installation (developers)
 
-Esta opción no requiere firma ni modificar preferencias. La extensión se elimina al cerrar Firefox, pero es la forma más rápida para probar cambios durante el desarrollo.
+No signature or preference changes required. The extension is removed when Firefox closes, but this is the fastest way to test changes during development.
 
-1. Abre Firefox y navega a:
+1. Open Firefox and navigate to:
    ```
    about:debugging#/runtime/this-firefox
    ```
-2. Haz clic en **Cargar complemento temporal…**
-3. Navega a la carpeta `angular-inspector/` y selecciona el archivo **`manifest.json`**.
-4. La extensión aparece en la lista con un contador de tiempo de vida.
+2. Click **Load Temporary Add-on…**
+3. Navigate to the project folder and select the **`manifest.firefox.json`** file.
+4. The extension appears in the list with a session lifetime indicator.
 
-> Cada vez que modifiques el código fuente, haz clic en **Recargar** junto al nombre de la extensión para aplicar los cambios sin necesidad de reinstalarla.
-
----
-
-### Opción C — Firefox Developer Edition / Nightly
-
-Firefox Developer Edition y Nightly tienen la verificación de firma deshabilitada por defecto, por lo que el XPI se puede instalar directamente:
-
-1. Descarga [Firefox Developer Edition](https://www.mozilla.org/firefox/developer/) o [Firefox Nightly](https://www.mozilla.org/firefox/channel/desktop/#nightly).
-2. Sigue los **pasos 2 y 3 de la Opción A** (sin necesidad de cambiar `xpinstall.signatures.required`).
+> Whenever you modify source code, click **Reload** next to the extension name to apply changes without reinstalling.
 
 ---
 
-### Opción D — AMO (distribución pública)
+#### Option C — Firefox Developer Edition / Nightly
 
-Para que cualquier usuario pueda instalar DevTools Companion for Angular desde `addons.mozilla.org`:
+Firefox Developer Edition and Nightly have signature verification disabled by default, so the XPI can be installed directly:
 
-#### Requisitos previos
+1. Download [Firefox Developer Edition](https://www.mozilla.org/firefox/developer/) or [Firefox Nightly](https://www.mozilla.org/firefox/channel/desktop/#nightly).
+2. Follow **Steps 2 and 3 of Option A** (no need to change `xpinstall.signatures.required`).
 
-- Cuenta de desarrollador en [addons.mozilla.org](https://addons.mozilla.org/developers/)
-- `npm install` ejecutado en la carpeta del proyecto (instala `web-ext`)
-- Credenciales de la API de AMO (se obtienen en `addons.mozilla.org/developers/addon/api/key/`)
+---
 
-#### Proceso de firma y envío
+#### Option D — AMO (public distribution)
+
+To let any user install DevTools Companion for Angular from `addons.mozilla.org`:
+
+**Prerequisites**
+
+- Developer account at [addons.mozilla.org](https://addons.mozilla.org/developers/)
+- `npm install` run in the project folder (installs `web-ext`)
+- AMO API credentials (obtained at `addons.mozilla.org/developers/addon/api/key/`)
+
+**Sign and submit**
 
 ```bash
-# 1. Validar la extensión con web-ext
+# 1. Validate the extension
 npm run lint
 
-# 2a. Firma automática (canal unlisted — no aparece en búsquedas AMO)
-#     El .xpi firmado se descargará automáticamente en dist/
+# 2a. Automatic signing (unlisted channel — does not appear in AMO search)
+#     The signed .xpi is downloaded automatically into dist/
 AMO_API_KEY=user:xxxxx AMO_API_SECRET=xxxxxx npm run sign
 
-# 2b. Alternativamente, sube el XPI de forma manual:
+# 2b. Alternatively, upload manually:
 #     addons.mozilla.org → Developer Hub → Submit a New Add-on
-#     → Upload your add-on → selecciona dist/angular-inspector.xpi
+#     → Upload your add-on → select dist/devtools-companion-angular-<version>.xpi
 ```
 
-Una vez aprobada (revisión automática en minutos para extensiones de bajo riesgo), los usuarios pueden instalarla con un clic desde AMO y recibirán actualizaciones automáticas.
+Once approved (automatic review takes minutes for low-risk extensions), users can install it with one click from AMO and will receive automatic updates.
 
 ---
 
-## 3. Primeros pasos
+### Chrome
 
-1. **Abre una aplicación Angular** en cualquier pestaña de Firefox. Puede ser local (`localhost`) o remota.
-2. **Abre las herramientas de desarrollador** con `F12` o `Ctrl+Shift+I`.
-3. Busca la pestaña **DevTools Companion for Angular** en la barra de pestañas de DevTools (puede estar oculta detrás del botón `»` si hay muchas pestañas abiertas).
-4. Si la app Angular está en **modo desarrollo**, verás el badge verde **Angular (ivy)** en la esquina superior derecha del panel.
-5. Si la app está en **modo producción**, aparecerá un aviso amarillo con el botón **Enable Debug Tools**. Haz clic para activar las APIs de inspección (requiere confirmación).
+#### Option E — Chrome Web Store
 
-> **Tip:** Si el badge muestra "Detecting Angular…" durante más de 10 segundos, recarga la página con la pestaña de DevTools ya abierta. Algunas SPAs completan su bootstrap después de que el content script se inyecta.
+1. Visit the [DevTools Companion for Angular](https://chromewebstore.google.com) page on the Chrome Web Store.
+2. Click **Add to Chrome**.
+3. Confirm the permissions dialog.
+
+The extension installs permanently and updates automatically.
 
 ---
 
-## 4. Manual de usuario
+#### Option F — Unpacked extension (developers)
 
-### 🌲 Components — Árbol de componentes
+**Step 1 — Build the extension**
 
-Es la pestaña principal. Muestra la jerarquía completa de componentes Angular renderizados en la página.
+```bash
+npm run build:chrome
+# Output: dist/devtools-companion-angular-chrome-<version>.zip
+```
 
-#### Vista de árbol (panel izquierdo)
+Unzip the output file into a local folder (e.g. `dist/chrome-unpacked/`).
 
-| Elemento | Descripción |
+**Step 2 — Load the unpacked extension**
+
+1. Open Chrome and navigate to:
+   ```
+   chrome://extensions
+   ```
+2. Enable **Developer mode** (toggle in the top-right corner).
+3. Click **Load unpacked**.
+4. Select the unzipped folder.
+
+The extension appears in the list. To apply source code changes, click the refresh icon on the extension card.
+
+---
+
+## 3. Getting started
+
+1. **Open an Angular application** in any browser tab — local (`localhost`) or remote.
+2. **Open DevTools** with `F12` or `Ctrl+Shift+I` (Mac: `Cmd+Option+I`).
+3. Look for the **Angular** tab in the DevTools tab bar. If it is not visible, click the `»` overflow button to find it.
+4. If the Angular app is running in **development mode**, you will see a green **Angular (Ivy)** badge in the top-right corner of the panel.
+5. If the app is in **production mode**, a yellow notice appears with an **Enable Debug Tools** button. Click it to activate the inspection APIs (requires confirmation in the page context).
+
+> **Tip:** If the badge shows "Detecting Angular…" for more than 10 seconds, reload the page with the DevTools tab already open. Some SPAs complete their bootstrap after the content script has been injected.
+
+---
+
+## 4. User manual
+
+### 🌲 Components — Component tree
+
+The main tab. Displays the full Angular component hierarchy rendered on the page.
+
+#### Tree view (left panel)
+
+| Element | Description |
 |---|---|
-| Nombre en negrita | Clase del componente (`AppComponent`, `HeroListComponent`…) |
-| `<selector>` en gris | Selector HTML usado en la plantilla |
-| Badge `OnPush` | Indica que el componente usa la estrategia `OnPush` |
-| ▸ / ▾ | Expande o colapsa los hijos del nodo |
+| Bold name | Component class (`AppComponent`, `HeroListComponent`…) |
+| `<selector>` in gray | HTML selector used in the template |
+| `OnPush` badge | Indicates the component uses the `OnPush` change detection strategy |
+| ▸ / ▾ | Expand or collapse child nodes |
 
-**Acciones disponibles:**
+**Available actions:**
 
-- **Clic en un nodo** — selecciona el componente y muestra sus detalles en el panel derecho. Un overlay rojo resalta el elemento DOM correspondiente en la página.
-- **Campo de búsqueda** — filtra el árbol por nombre de clase o selector. El árbol se actualiza en tiempo real.
-- **Botón ⊕ (picker)** — activa el modo de selección: haz clic en cualquier elemento de la página para saltar directamente al componente correspondiente en el árbol.
-- **Botón ↺** — fuerza una nueva exploración del árbol (útil si la app modifica el DOM dinámicamente).
+- **Click a node** — selects the component and shows its details in the right panel. A red overlay highlights the corresponding DOM element on the page.
+- **Search field** — filters the tree by class name or selector. The tree updates in real time.
+- **⊕ (picker) button** — activates pick mode: click any element on the page to jump directly to the matching component in the tree.
+- **↺ button** — forces a fresh tree scan (useful when the app modifies the DOM dynamically).
 
-#### Panel de detalles (panel derecho)
+#### Details panel (right panel)
 
-Cuando seleccionas un componente, se muestran cuatro secciones:
+When a component is selected, four sections are shown:
 
-**Component** — información básica:
+**Component** — basic information:
 
-| Campo | Contenido |
+| Field | Content |
 |---|---|
-| Class | Nombre de la clase TypeScript |
-| Selector | Selector CSS del componente |
-| CD Strategy | `Default` o `OnPush` |
-| Element | Tag HTML del elemento host |
+| Class | TypeScript class name |
+| Selector | Component CSS selector |
+| CD Strategy | `Default` or `OnPush` |
+| Element | Host HTML tag |
 
-**@Input() Bindings** — todos los `@Input()` del componente con sus valores actuales.
+**@Input() Bindings** — all `@Input()` properties with their current values.
 
-- Los valores son editables: haz clic en el valor (campo azul), escribe un nuevo valor en JSON válido y pulsa `Tab` o haz clic fuera. El cambio se aplica inmediatamente en la página sin necesidad de recargar.
+- Values are editable: click a value (blue field), type a new value in valid JSON, and press `Tab` or click away. The change is applied to the live page immediately.
 
-**@Output() Events** — lista de todos los `EventEmitter` declarados como `@Output()`.
+**@Output() Events** — list of all `EventEmitter` properties declared as `@Output()`.
 
-**Properties** — resto de propiedades públicas del componente que no son `@Input()`.
+**Properties** — remaining public properties of the component that are not `@Input()`.
 
-**Botones de acción:**
+**Action buttons:**
 
-- **Copy JSON** — copia el estado completo del componente al portapapeles como JSON.
-- **Clear Highlight** — elimina el overlay rojo de la página.
+- **Copy JSON** — copies the full component state to the clipboard as JSON.
+- **Clear Highlight** — removes the red overlay from the page.
 
 ---
 
-### 📡 HTTP — Monitor de peticiones
+### 📡 HTTP — Request monitor
 
-Captura todas las peticiones HTTP realizadas por la aplicación vía `XMLHttpRequest` y `fetch()`, tanto las generadas por `HttpClient` de Angular como las directas.
+Captures all HTTP requests made by the application via `XMLHttpRequest` and `fetch()`, including those generated by Angular's `HttpClient` and direct calls.
 
-> La captura comienza cuando la extensión inyecta el bridge en la página. Peticiones lanzadas antes de que se abran las DevTools pueden no aparecer.
+> Capture starts when the extension injects the bridge into the page. Requests made before DevTools was opened may not appear.
 
-#### Lista de peticiones (panel izquierdo)
+#### Request list (left panel)
 
-Cada fila muestra:
+Each row shows:
 
-| Columna | Descripción |
+| Column | Description |
 |---|---|
-| Método | Badge de color: `GET` verde, `POST` azul, `PUT` amarillo, `DELETE` rojo, `PATCH` gris |
-| Status | Código HTTP: verde (2xx), amarillo (3xx), rojo (4xx/5xx) |
-| URL | URL completa (truncada, tooltip con la URL completa) |
-| Duración | Tiempo de respuesta en milisegundos |
-| Hora | Hora local de la petición |
+| Method | Color-coded badge: `GET` green, `POST` blue, `PUT` amber, `DELETE` red, `PATCH` gray |
+| Status | HTTP code: green (2xx), amber (3xx), red (4xx/5xx) |
+| URL | Full URL (truncated; hover for the full URL) |
+| Duration | Response time in milliseconds |
+| Time | Local time of the request |
 
-Una barra roja a la izquierda de la fila indica que la petición superó el umbral de **petición lenta** (configurable en Settings, por defecto 1000 ms).
+A red bar on the left edge of a row means the request exceeded the **slow request threshold** (configurable in Settings; default 1000 ms).
 
-El badge numérico rojo en la pestaña **HTTP** cuenta las peticiones fallidas (4xx / 5xx) desde la última limpieza del log.
+The red number badge on the **HTTP** tab counts failed requests (4xx / 5xx) since the last log clear.
 
-**Filtros disponibles (barra de herramientas):**
+**Toolbar filters:**
 
-- **URL** — texto libre, filtra por subcadena de la URL.
-- **Método** — desplegable: All / GET / POST / PUT / DELETE / PATCH.
-- **Status** — desplegable: All / 2xx / 3xx / 4xx / 5xx.
-- **Botón ✕** — limpia el log completo.
+- **URL** — free text, filters by URL substring.
+- **Method** — dropdown: All / GET / POST / PUT / DELETE / PATCH.
+- **Status** — dropdown: All / 2xx / 3xx / 4xx / 5xx.
+- **✕ button** — clears the entire log.
 
-#### Detalle de petición (panel derecho)
+#### Request detail (right panel)
 
-Haz clic en una fila para ver cuatro pestañas:
+Click any row to see four sub-tabs:
 
-| Pestaña | Contenido |
+| Tab | Content |
 |---|---|
-| **Headers** | Cabeceras de la petición y de la respuesta |
-| **Request** | Cuerpo de la petición (JSON auto-formateado) |
-| **Response** | Cuerpo de la respuesta (JSON auto-formateado, hasta 50 KB) |
-| **Timing** | Hora de inicio, hora de fin, duración y código de estado |
+| **Headers** | Request and response headers |
+| **Request** | Request body (JSON auto-formatted) |
+| **Response** | Response body (JSON auto-formatted, up to 50 KB) |
+| **Timing** | Start time, end time, duration, and status code |
 
 ---
 
-### 🗄️ Store — Gestión de estado
+### 🗄️ Store — State management
 
-Inspecciona los stores NgRx, Akita y NGXS activos en la aplicación. La detección es automática al cargar la página.
+Inspects active NgRx, Akita, and NGXS stores in the application. Detection is automatic on page load.
 
-El badge en la barra de herramientas indica el tipo de store detectado (`NGRX`, `AKITA`, `NGXS`).
+The badge in the toolbar shows the detected store type (`NGRX`, `AKITA`, `NGXS`).
 
-#### Log de acciones (panel izquierdo)
+#### Action log (left panel)
 
-Muestra todas las acciones despachadas en orden cronológico inverso (la más reciente arriba).
+Lists all dispatched actions in reverse chronological order (most recent first).
 
-- **Clic en una acción** — el árbol de estado del panel derecho retrocede al snapshot de ese momento (time-travel).
-- **Campo de búsqueda** — filtra acciones por tipo.
-- **Botón ✕** — limpia el log y los snapshots.
+- **Click an action** — the state tree in the right panel reverts to the snapshot at that moment (time-travel debugging).
+- **Search field** — filters actions by type.
+- **✕ button** — clears the log and all snapshots.
 
-#### Árbol de estado (panel derecho)
+If your app uses plain Angular services instead of a dedicated state library, click **Scan Services** to snapshot and browse injectable service state directly.
 
-Muestra el estado completo del store en formato JSON interactivo:
+#### State tree (right panel)
 
-- Haz clic en `▾` / `▸` para expandir o contraer nodos.
-- **Search keys** — filtra el árbol por nombre de clave o valor.
-- **Current State** — salta al snapshot más reciente.
-- **Export JSON** — copia el estado actual al portapapeles.
+Shows the full store state as an interactive JSON tree:
+
+- Click `▾` / `▸` to expand or collapse nodes.
+- **Search keys** — filters the tree by key name or value.
+- **Current State** — jumps to the latest snapshot.
+- **Export JSON** — copies the current state to the clipboard.
 
 ---
 
-### 🛣️ Router — Inspector de rutas
+### 🛣️ Router — Route inspector
 
-Muestra el estado del Router de Angular: ruta activa, historial de navegaciones y configuración de rutas.
+Displays Angular Router state: active route, navigation history, and route configuration.
 
 #### Current Route
 
-| Campo | Descripción |
+| Field | Description |
 |---|---|
-| URL | URL completa activa en el navegador |
-| Path | Segmento de ruta normalizado |
-| Component | Componente asociado a la ruta activa |
-| Params | Parámetros de ruta (`:id`, `:slug`…) |
-| Query Params | Parámetros de query (`?search=…&page=…`) |
-| Data | Datos estáticos definidos en la configuración de rutas |
+| URL | Full active URL in the browser |
+| Path | Normalized route segment |
+| Component | Component associated with the active route |
+| Params | Route parameters (`:id`, `:slug`…) |
+| Query Params | Query parameters (`?search=…&page=…`) |
+| Data | Static data defined in the route configuration |
 
 #### Navigation History
 
-Lista cronológica de todos los eventos de navegación. Las filas rojas indican un `NavigationError`; las amarillas, un `NavigationCancel` (por ejemplo, rechazado por un guard).
+Chronological list of all navigation events. Red rows indicate a `NavigationError`; amber rows indicate a `NavigationCancel` (e.g. rejected by a guard).
 
-- **Botón Clear** — borra el historial de navegación.
+- **Clear button** — clears the navigation history.
 
 #### Route Configuration
 
-Árbol colapsable con la estructura completa de rutas registradas en la aplicación:
+Collapsible tree showing the full route structure registered in the application:
 
-- Las rutas lazy-loaded muestran el badge **lazy**.
-- Las rutas con `canActivate` muestran el indicador **guard**.
-- La rama activa aparece resaltada en rojo.
+- Lazy-loaded routes show a **lazy** badge.
+- Routes with `canActivate` show a **guard** indicator.
+- The active branch is highlighted in red.
 
 ---
 
-### 💉 DI — Inyección de dependencias
+### 💉 DI — Dependency injection
 
-Permite explorar los servicios inyectados en el componente seleccionado en la pestaña **Components**.
+Explore the services injected into the component selected in the **Components** tab.
 
-#### Lista de servicios (panel izquierdo)
+#### Service list (left panel)
 
-Muestra todos los servicios resueltos por el injector del componente seleccionado.
+Shows all services resolved by the injector of the selected component.
 
-| Columna | Descripción |
+| Column | Description |
 |---|---|
-| Nombre | Clase del servicio |
-| Scope | `root`, `module` o `component` según el nivel del injector |
-| ⚠ Circular | Badge de advertencia si se detecta una dependencia circular |
+| Name | Service class name |
+| Scope | `root`, `module`, or `component` depending on the injector level |
+| ⚠ Circular | Warning badge if a circular dependency is detected |
 
-La sección **Root Providers** en la parte inferior lista todos los providers registrados a nivel raíz.
+The **Root Providers** section at the bottom lists all providers registered at the root level.
 
-#### Detalle de servicio (panel derecho)
+#### Service detail (right panel)
 
-Haz clic en un servicio para ver sus propiedades públicas con sus valores actuales en tiempo de ejecución.
+Click a service to see its public properties with their current runtime values.
 
 ---
 
 ### ⚡ Performance — Profiler
 
-Monitoriza los ciclos de change detection de Angular y detecta posibles fugas de suscripciones.
+Monitors Angular change detection cycles and detects potential subscription leaks.
 
-#### Métricas (tarjetas superiores)
+#### Summary cards (top)
 
-| Métrica | Descripción |
+| Metric | Description |
 |---|---|
-| Total CD Cycles | Número total de ciclos de change detection desde que se abrió el panel |
-| Avg Duration | Duración media de un ciclo en ms |
-| Min / Max | Duración mínima y máxima registrada |
+| Total CD Cycles | Total number of change detection cycles since the panel was opened |
+| Avg Duration | Average cycle duration in ms |
+| Min / Max | Minimum and maximum recorded duration |
 
 #### CD Timeline
 
-Gráfico de barras que muestra los últimos 60 ciclos de change detection:
+Bar chart showing the last 60 change detection cycles:
 
-| Color | Significado |
+| Color | Meaning |
 |---|---|
-| Rojo (normal) | Ciclo con duración dentro del umbral |
-| Amarillo | Ciclo lento (> 16 ms, más de un frame a 60 fps) |
-| Rojo intenso | Ciclo crítico (> 50 ms) |
+| Red (normal) | Cycle within normal duration |
+| Amber | Slow cycle (> 16 ms, more than one frame at 60 fps) |
+Bright red | Critical cycle (> 50 ms) |
 
-Pasa el cursor sobre una barra para ver la duración exacta, el trigger y la hora.
+Hover over a bar to see the exact duration, trigger, and timestamp.
 
 #### Most Checked Components
 
-Tabla con los 10 componentes comprobados con mayor frecuencia. Los componentes con estrategia **Default** que aparecen en lo alto de la tabla son candidatos a migrar a **OnPush** para mejorar el rendimiento.
+Table ranking the 10 most frequently checked components. Components with the **Default** strategy that appear at the top are candidates for migrating to **OnPush** to improve rendering performance.
 
 #### Subscription Leaks
 
-Si DevTools Companion for Angular detecta suscripciones a Observables que no se han desuscrito al destruirse el componente, aparece una sección de alertas con el nombre del componente y el número de suscripciones fugadas.
+If DevTools Companion for Angular detects Observable subscriptions that were not unsubscribed when the component was destroyed, an alert section appears listing the component name and the number of leaked subscriptions.
 
-**Botones:**
+**Buttons:**
 
-- **▶ Record** — activa la instrumentación de ciclos en la página.
-- **✕ Clear** — borra todos los datos registrados.
-- **⬇ Export** — copia los datos como JSON al portapapeles.
-
----
-
-### 🗺️ Sources — Source Maps
-
-Permite navegar y leer el código TypeScript original de la aplicación cuando el servidor sirve archivos `.js.map`.
-
-#### Explorador de archivos (panel izquierdo)
-
-Árbol de todos los ficheros `.ts` originales descubiertos a partir de los source maps de los bundles cargados. Los archivos se agrupan por directorio.
-
-- **Haz clic en un archivo** para ver su contenido con resaltado de sintaxis TypeScript en el panel derecho.
-- **Campo de búsqueda** — filtra la lista de archivos por ruta o nombre.
-
-#### Visor de código (panel derecho)
-
-Muestra el contenido del archivo seleccionado con coloreado de sintaxis (palabras clave, decoradores, strings, números y comentarios).
-
-Desde la pestaña **Components**, el menú contextual de un componente (cuando los source maps están disponibles) incluye la opción **Jump to source**, que abre directamente el archivo `.ts` del componente en esta pestaña y desplaza el scroll hasta la línea correspondiente.
-
-> Si no hay source maps disponibles, el panel muestra un aviso. La mayoría de despliegues en producción no sirven archivos `.map`.
+- **▶ Record** — starts cycle instrumentation on the page.
+- **✕ Clear** — discards all recorded data.
+- **⬇ Export** — copies the recorded data as JSON to the clipboard.
 
 ---
 
-### ⚙️ Settings — Configuración
+### 🗺️ Sources — Source maps
 
-| Ajuste | Descripción | Valor por defecto |
+Browse and read the original TypeScript source of the application when the server serves `.js.map` files alongside the bundles.
+
+#### File explorer (left panel)
+
+Tree of all original `.ts` files discovered from the source maps of loaded bundles. Files are grouped by directory.
+
+- **Click a file** to view its content with TypeScript syntax highlighting in the right panel.
+- **Search field** — filters the file list by path or name.
+
+#### Code viewer (right panel)
+
+Displays the selected file with syntax coloring (keywords, decorators, strings, numbers, and comments).
+
+From the **Components** tab, when source maps are available, the context menu of a component includes a **Jump to source** option that opens the component's `.ts` file here and scrolls to the matching line.
+
+> If no source maps are available, the panel shows a notice. Most production deployments do not serve `.map` files.
+
+---
+
+### ⚙️ Settings
+
+| Setting | Description | Default |
 |---|---|---|
 | **Theme** | Dark / Light / System | Dark |
-| **Capture request/response bodies** | Almacena los cuerpos de las peticiones HTTP en el log | Activado |
-| **Max HTTP history** | Número máximo de peticiones a retener en memoria | 500 |
-| **Slow request threshold** | Umbral en ms para marcar una petición como lenta | 1000 ms |
-| **CD cycle alert threshold** | Ciclos/segundo a partir de los cuales se dispara una alerta de rendimiento | 60 |
-| **Auto-clear on navigation** | Limpia el log HTTP y el CD al cambiar de ruta | Desactivado |
-| **Angular detection timeout** | Segundos que espera para detectar Angular en la página | 10 s |
-| **Prompt to enable debug mode** | Muestra el botón para activar las debug tools en producción | Activado |
+| **Capture request/response bodies** | Store HTTP bodies in the monitor log | Enabled |
+| **Max HTTP history** | Maximum number of requests to keep in memory | 500 |
+| **Slow request threshold** | Threshold in ms above which a request is flagged as slow | 1000 ms |
+| **CD cycle alert threshold** | Cycles per second above which a performance warning is triggered | 60 |
+| **Auto-clear on navigation** | Clears the HTTP log and CD data on route change | Disabled |
+| **Angular detection timeout** | Seconds to wait for Angular detection on page load | 10 s |
+| **Prompt to enable debug mode** | Shows the button to activate debug tools when a production build is detected | Enabled |
 
-Haz clic en **Save Settings** para persistir los cambios. Los ajustes se guardan en `browser.storage.local` y sobreviven reinicios del navegador.
+Click **Save Settings** to persist your changes. Settings are stored in `browser.storage.local` and survive browser restarts.
+
+Click **Reset Defaults** to restore all settings to their original values.
 
 ---
 
-## 5. Limitaciones conocidas
+## 5. Known limitations
 
-| Limitación | Detalle |
+| Limitation | Detail |
 |---|---|
-| **Modo producción** | En builds de producción, Angular elimina las APIs `ng.*`. El árbol de componentes y el inspector de DI no funcionan. Los módulos HTTP, Router y Sources sí siguen disponibles. |
-| **Source maps en producción** | La mayoría de despliegues no sirven archivos `.map`. El visor de Sources solo funciona con source maps activos. |
-| **Zone.js-less (Angular 18+)** | Las apps Angular 18+ sin Zone.js pueden no disparar los hooks de change detection. El profiler puede no registrar ciclos en ese caso. |
-| **Nombres ofuscados** | Si el bundle está minificado sin source maps, los nombres de clases aparecerán ofuscados (`t`, `n`, `e`…). |
-| **Iframes cross-origin** | No es posible inspeccionar componentes Angular dentro de un `<iframe>` con origen distinto al de la página principal. |
-| **Peticiones anteriores a la apertura del panel** | El interceptor HTTP se instala al cargar la página. Las peticiones realizadas antes de abrir DevTools no aparecen en el log. |
+| **Production mode** | Production builds remove Angular's `ng.*` debug APIs. The component tree and DI inspector are unavailable. The HTTP Monitor, Router, and Sources tabs remain fully functional. |
+| **Source maps in production** | Most production deployments do not serve `.map` files. The Sources viewer only works when source maps are actively served. |
+| **Zoneless Angular (Angular 18+)** | Apps running Angular 18+ without Zone.js may not trigger change detection hooks. The Performance profiler may not record cycles in that case. |
+| **Minified class names** | If the bundle is minified without source maps, class names will appear obfuscated (`t`, `n`, `e`…). |
+| **Cross-origin iframes** | Angular components inside a cross-origin `<iframe>` cannot be inspected. |
+| **Requests before panel open** | The HTTP interceptor is installed when the page loads. Requests made before DevTools was opened do not appear in the log. |
 
 ---
 
-## 6. Solución de problemas
+## 6. Troubleshooting
 
-### La pestaña DevTools Companion for Angular no aparece en DevTools
+### The Angular tab does not appear in DevTools
 
-- Verifica que la extensión está instalada y habilitada en `about:addons`.
-- Cierra y vuelve a abrir las herramientas de desarrollador (`F12` dos veces).
-- En `about:debugging`, comprueba que la extensión aparece en la lista sin errores.
+- Verify the extension is installed and enabled (`about:addons` in Firefox, `chrome://extensions` in Chrome).
+- Close and reopen DevTools (`F12` twice).
+- In Firefox, check `about:debugging` to confirm the extension appears without errors.
 
-### El badge muestra "No Angular" en una app Angular
+### The badge shows "No Angular" on an Angular app
 
-- La app puede estar en proceso de bootstrap. Recarga la página con DevTools ya abierto.
-- En SPAs con carga diferida, espera a que la app complete la inicialización.
-- Comprueba en la consola del navegador si hay errores de JavaScript que impidan el bootstrap de Angular.
+- The app may still be bootstrapping. Reload the page with DevTools already open.
+- In SPAs with deferred loading, wait for the app to complete initialization.
+- Check the browser console for JavaScript errors that might prevent Angular from bootstrapping.
 
-### El árbol de componentes aparece vacío en modo producción
+### The component tree is empty in production mode
 
-- Haz clic en **Enable Debug Tools** en el banner amarillo. Esto invoca `enableDebugTools()` en el contexto de la página, lo que reactiva las APIs `ng.*`.
-- En algunos bundles de producción esto no es posible. En ese caso, usa las pestañas HTTP y Router, que no dependen de `ng.*`.
+- Click **Enable Debug Tools** in the yellow banner. This calls `enableDebugTools()` in the page context, which reactivates the `ng.*` APIs.
+- On some production bundles this is not possible. In that case, use the HTTP Monitor and Router tabs, which do not depend on `ng.*`.
 
-### Las peticiones HTTP no aparecen en el monitor
+### HTTP requests do not appear in the monitor
 
-- Asegúrate de que la página se ha cargado **después** de instalar la extensión (el interceptor se inyecta al cargar el document).
-- Algunas librerías que envuelven `fetch` o `XMLHttpRequest` antes de que el bridge se inyecte pueden no ser interceptadas. Recarga la página con DevTools abierto.
+- Make sure the page was loaded **after** the extension was installed (the interceptor is injected at document load).
+- Some libraries that wrap `fetch` or `XMLHttpRequest` before the bridge is injected may not be intercepted. Reload the page with DevTools open.
 
-### El build falla con errores de Node.js
+### The build fails with Node.js errors
 
 ```bash
-# Verifica la versión de Node.js (requiere 18+)
+# Check Node.js version (requires 18+)
 node --version
 
-# Si la carpeta dist/ tiene permisos incorrectos
+# If the dist/ folder has permission issues
 rm -rf dist/
-node build.js
+npm run build:firefox   # or build:chrome
 ```
 
-### La extensión se desinstala al cerrar Firefox (Opción B)
+### The extension is removed when Firefox closes (Option B)
 
-Esto es el comportamiento esperado de la instalación temporal. Para persistencia, usa la **Opción A** (XPI permanente) o la **Opción D** (AMO).
+This is the expected behavior for a temporary installation. For persistence, use **Option A** (permanent XPI) or **Option D** (AMO).

@@ -3,11 +3,18 @@
   "version": "1.1.4",
   "description": "DevTools extension for Angular application introspection — Firefox & Chrome",
   "scripts": {
-    "build": "node build.js",
-    "icons": "node build.js icons",
-    "package": "node build.js package",
-    "lint": "web-ext lint --source-dir . --ignore-files build.js package.json dist/** .claude/**",
-    "sign": "web-ext sign --source-dir . --api-key $AMO_API_KEY --api-secret $AMO_API_SECRET --channel unlisted"
+    "build":           "node build.js firefox",
+    "build:firefox":   "node build.js firefox",
+    "build:chrome":    "node build.js chrome",
+    "build:all":       "node build.js firefox && node build.js chrome",
+    "icons":           "node build.js icons",
+    "icons:firefox":   "node build.js firefox icons",
+    "icons:chrome":    "node build.js chrome icons",
+    "package":         "node build.js package",
+    "package:firefox": "node build.js firefox package",
+    "package:chrome":  "node build.js chrome package",
+    "lint":            "web-ext lint --source-dir . --ignore-files build.js package.json dist/** .claude/**",
+    "sign":            "web-ext sign --source-dir . --api-key $AMO_API_KEY --api-secret $AMO_API_SECRET --channel unlisted"
   },
   "devDependencies": {
     "docx": "^9.7.1",
